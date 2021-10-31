@@ -1,0 +1,47 @@
+﻿<Properties StartupConfiguration="{8D2967C8-BC0E-4B9C-B225-03F975F63664}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Archi.api/Properties/launchSettings.json">
+    <Files>
+      <File FileName="Archi.api/Migrations/ArchiDbContextModelSnapshot.cs" Line="1" Column="1" />
+      <File FileName="Archi.api/Data/ArchiDbContext.cs" />
+      <File FileName="Archi.api/Controllers/CustomersController.cs" />
+      <File FileName="Archi.api/Controllers/PizzasController.cs" />
+      <File FileName="Archi.Library/Controllers/BaseController.cs" />
+      <File FileName="Archi.Library/Models/ModelBase.cs" />
+      <File FileName="Archi.Library/Archi.Library.csproj" />
+      <File FileName="Archi.api/Models/Pizza.cs" />
+      <File FileName="Archi.api/appsettings.json" />
+      <File FileName="Archi.api/Properties/launchSettings.json" Line="24" Column="30" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="ArchiLog" expanded="True">
+            <Node name="Archi.api" expanded="True">
+              <Node name="Controllers" expanded="True" />
+              <Node name="Data" expanded="True" />
+              <Node name="Migrations" expanded="True" />
+              <Node name="Models" expanded="True" />
+              <Node name="Properties" expanded="True">
+                <Node name="launchSettings.json" selected="True" />
+              </Node>
+            </Node>
+            <Node name="Archi.Library" expanded="True">
+              <Node name="Dependencies" expanded="True">
+                <Node name="FrameworkReferences" expanded="True" />
+              </Node>
+              <Node name="Controllers" expanded="True" />
+              <Node name="Models" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.Archi.api PreferredExecutionTarget="/Applications/Safari.app" />
+</Properties>

@@ -1,0 +1,149 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/eleacarton/Projects/projet-architecture/ArchiLog/Archi.api/Archi.api.csproj": {}
+  },
+  "projects": {
+    "/Users/eleacarton/Projects/projet-architecture/ArchiLog/Archi.api/Archi.api.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/eleacarton/Projects/projet-architecture/ArchiLog/Archi.api/Archi.api.csproj",
+        "projectName": "Archi.api",
+        "projectPath": "/Users/eleacarton/Projects/projet-architecture/ArchiLog/Archi.api/Archi.api.csproj",
+        "packagesPath": "/Users/eleacarton/.nuget/packages/",
+        "outputPath": "/Users/eleacarton/Projects/projet-architecture/ArchiLog/Archi.api/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/eleacarton/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {
+              "/Users/eleacarton/Projects/projet-architecture/ArchiLog/Archi.Library/Archi.Library.csproj": {
+                "projectPath": "/Users/eleacarton/Projects/projet-architecture/ArchiLog/Archi.Library/Archi.Library.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.11, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[5.0.11, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.11, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[5.6.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.402/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/eleacarton/Projects/projet-architecture/ArchiLog/Archi.Library/Archi.Library.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/eleacarton/Projects/projet-architecture/ArchiLog/Archi.Library/Archi.Library.csproj",
+        "projectName": "Archi.Library",
+        "projectPath": "/Users/eleacarton/Projects/projet-architecture/ArchiLog/Archi.Library/Archi.Library.csproj",
+        "packagesPath": "/Users/eleacarton/.nuget/packages/",
+        "outputPath": "/Users/eleacarton/Projects/projet-architecture/ArchiLog/Archi.Library/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/eleacarton/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Mvc.Core": {
+              "target": "Package",
+              "version": "[2.2.5, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.11, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.402/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
