@@ -18,11 +18,31 @@ namespace Archi.Library.Controllers
             _context = context;
         }
 
-        // GET: api/Pizzas
+        /*// GET: api/Pizzas
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TModel>>> GetAll()
         {
             return await _context.Set<TModel>().Where(x => x.Active == true).ToListAsync();
+        }*/
+
+        // GET: api/Pizzas?range=0-5
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TModel>>> GetRanged(string range)
+        {
+            if(range == null)
+            {
+                return await _context.Set<TModel>().Where(x => x.Active == true).ToListAsync();
+            }
+            else
+            {
+                string[] limits = range.Split('-');
+                int limitMin = int.Parse(limits[0]) - 1;
+                int limitMax = int.Parse(limits[1]) - int.Parse(limits[0]) + 1;
+
+                var list = await Task.Run(() => _context.Set<TModel>().Where(x => x.Active == true).ToList().GetRange(limitMin, limitMax));
+
+                return list;
+            }
         }
     }
 }
