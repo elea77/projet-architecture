@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Archi.Library.Models;
@@ -25,16 +26,13 @@ namespace Archi.Library.Controllers
             return await _context.Set<TModel>().Where(x => x.Active == true).ToListAsync();
         }*/
 
-        // GET: api/Pizzas?range=0-5
+        // GET: api/Pizzas?range=0-5 | api/Pizzas?asc=price
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TModel>>> GetRanged(string range)
+        public async Task<ActionResult<IEnumerable<TModel>>> GetRanged(string range, string asc, string desc)
         {
-            if(range == null)
+            if(range != null)
             {
-                return await _context.Set<TModel>().Where(x => x.Active == true).ToListAsync();
-            }
-            else
-            {
+
                 string[] limits = range.Split('-');
                 int limitMin = int.Parse(limits[0]) - 1;
                 int limitMax = int.Parse(limits[1]) - int.Parse(limits[0]) + 1;
@@ -42,6 +40,46 @@ namespace Archi.Library.Controllers
                 var list = await Task.Run(() => _context.Set<TModel>().Where(x => x.Active == true).ToList().GetRange(limitMin, limitMax));
 
                 return list;
+            }
+            if(asc != null)
+            {
+
+                var source = _context.Set<TModel>();
+
+                // LAMBDA: x => x.[PropertyName]
+                var parameter = Expression.Parameter(typeof(TModel), "x");
+
+                Expression property = Expression.Property(parameter, asc);
+                var lambda = Expression.Lambda(property, parameter);
+
+                // REFLECTION: source.OrderBy(x => x.Property)
+                var orderByMethod = typeof(Queryable).GetMethods().First(x => x.Name == "OrderBy" && x.GetParameters().Length == 2);
+                var orderByGeneric = orderByMethod.MakeGenericMethod(typeof(TModel), property.Type);
+                var result = orderByGeneric.Invoke(null, new object[] { source, lambda });
+
+                return await ((IOrderedQueryable<TModel>)result).ToListAsync();
+            }
+            if (desc != null)
+            {
+
+                var source = _context.Set<TModel>();
+
+                // LAMBDA: x => x.[PropertyName]
+                var parameter = Expression.Parameter(typeof(TModel), "x");
+
+                Expression property = Expression.Property(parameter, desc);
+                var lambda = Expression.Lambda(property, parameter);
+
+                // REFLECTION: source.OrderBy(x => x.Property)
+                var orderByMethod = typeof(Queryable).GetMethods().First(x => x.Name == "OrderByDescending" && x.GetParameters().Length == 2);
+                var orderByGeneric = orderByMethod.MakeGenericMethod(typeof(TModel), property.Type);
+                var result = orderByGeneric.Invoke(null, new object[] { source, lambda });
+
+                return await ((IOrderedQueryable<TModel>)result).ToListAsync();
+            }
+            else
+            {
+                return await _context.Set<TModel>().Where(x => x.Active == true).ToListAsync();
             }
         }
     }

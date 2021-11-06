@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Archi.api.Data;
 using Archi.api.Models;
+using Archi.Library.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,21 +15,15 @@ namespace Archi.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomersController : ControllerBase
+    public class CustomersController : BaseController<ArchiDbContext, Customer>
     {
-        private readonly ArchiDbContext _context;
+        // private readonly ArchiDbContext _context;
 
-        public CustomersController(ArchiDbContext context)
+        public CustomersController(ArchiDbContext context) : base(context)
         {
-            _context = context;
+            
         }
 
-        // GET: api/Customers
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
-        {
-            return await _context.Customers.Where(x => x.Active == true).ToListAsync();
-        }
 
         // GET: api/Customers/5
         [HttpGet("{id}")]
