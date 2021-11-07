@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Archi.Library.Extensions;
 using Archi.Library.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -82,5 +83,26 @@ namespace Archi.Library.Controllers
                 return await _context.Set<TModel>().Where(x => x.Active == true).ToListAsync();
             }
         }
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TModel>>> GetAllAsync([FromQuery] string fields)
+        {
+            var query = _context.Set<TModel>().AsQueryable();
+
+            if (Request != null)
+            {
+                var parameters = Request.Query.Where((x) => x.Key != "fields" && x.Key != "range" && x.Key != "asc" && x.Key !="desc");
+
+                if (parameters.Count() > 0)
+                {
+                    foreach (var parameter in parameters)
+                    {
+                        query = query.filter(parameter.Key, parameter.Value);
+                    }
+                }
+            }
+
+            return query.ToList();
+        }
+
     }
 }
