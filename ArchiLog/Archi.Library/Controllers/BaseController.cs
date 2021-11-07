@@ -78,19 +78,11 @@ namespace Archi.Library.Controllers
 
                 return await ((IOrderedQueryable<TModel>)result).ToListAsync();
             }
-            else
-            {
-                return await _context.Set<TModel>().Where(x => x.Active == true).ToListAsync();
-            }
-        }
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<TModel>>> GetAllAsync([FromQuery] string fields)
-        {
-            var query = _context.Set<TModel>().AsQueryable();
 
             if (Request != null)
             {
-                var parameters = Request.Query.Where((x) => x.Key != "fields" && x.Key != "range" && x.Key != "asc" && x.Key !="desc");
+                var query = _context.Set<TModel>().AsQueryable();
+                var parameters = Request.Query.Where((x) => x.Key != "fields" && x.Key != "range" && x.Key != "asc" && x.Key != "desc");
 
                 if (parameters.Count() > 0)
                 {
@@ -99,10 +91,14 @@ namespace Archi.Library.Controllers
                         query = query.filter(parameter.Key, parameter.Value);
                     }
                 }
+                return query.ToList();
             }
-
-            return query.ToList();
+            else
+            {
+                return await _context.Set<TModel>().Where(x => x.Active == true).ToListAsync();
+            }
         }
+        
 
     }
 }
