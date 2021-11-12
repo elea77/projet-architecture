@@ -20,29 +20,68 @@ namespace Archi.Library.Controllers
             _context = context;
         }
 
-        /*// GET: api/Pizzas
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<TModel>>> GetAll()
+        protected System.Linq.IQueryable<TModel> GetRanged(string range, IQueryable<TModel> query)
         {
-            return await _context.Set<TModel>().Where(x => x.Active == true).ToListAsync();
-        }*/
+            string[] limits = range.Split('-');
+            int limitMin = int.Parse(limits[0]);
+            int limitMax = int.Parse(limits[1]);
+            int numberElement = int.Parse(limits[1]) - int.Parse(limits[0]) + 1;
+            int countElement = query.Count();
+
+            int prevLimitMin = limitMin - numberElement;
+            int prevLimitMax = limitMax - numberElement;
+            if (prevLimitMin < 0)
+            {
+                prevLimitMin = 0;
+                prevLimitMax = prevLimitMin + numberElement - 1;
+            }
+            string rangePrev = prevLimitMin.ToString() + "-" + prevLimitMax.ToString();
+
+            int nextLimitMin = limitMin + numberElement;
+            int nextLimitMax = limitMax + numberElement;
+            if (nextLimitMax > countElement)
+            {
+                nextLimitMin = countElement - numberElement;
+                nextLimitMax = countElement - 1;
+            }
+            string rangeNext = nextLimitMin.ToString() + "-" + nextLimitMax.ToString();
+
+
+            Type myType = typeof(TModel);
+            string typeName = myType.Name;
+            string basePath = Request.Path;
+            string firstLink = basePath + "?range=0-" + (numberElement - 1);
+            string lastLink = basePath + "?range=" + (countElement - numberElement) + "-" + (countElement - 1);
+            string prevLink = basePath + "?range=" + rangePrev;
+            string nextLink = basePath + "?range=" + rangeNext;
+            Response.Headers.Add("Content-Range", range + "/" + numberElement);
+            Response.Headers.Add("Accept-Range", typeName + " 10");
+            Response.Headers.Add("Link", firstLink + "; rel=\"first\", " + prevLink + "; rel=\"prev\", " + nextLink + "; rel=\"next\", " + lastLink + "; rel=\"last\"");
+
+            query = query.Skip(limitMin).Take(numberElement);
+            return query;
+        }
 
         // GET: api/Pizzas?range=0-5 | api/Pizzas?asc=price
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TModel>>> GetRanged(string range, string asc, string desc)
+        public async Task<ActionResult<IEnumerable<TModel>>> Index(string range, string asc, string desc)
         {
-            if(range != null)
+            var query = _context.Set<TModel>().Where(x => x.Active == true);
+            if (!string.IsNullOrWhiteSpace(range))
             {
+                try
+                {
+                    query = GetRanged(range, query);
+                }
+                catch
+                {
 
-                string[] limits = range.Split('-');
-                int limitMin = int.Parse(limits[0]) - 1;
-                int limitMax = int.Parse(limits[1]) - int.Parse(limits[0]) + 1;
-
-                var list = await Task.Run(() => _context.Set<TModel>().Where(x => x.Active == true).ToList().GetRange(limitMin, limitMax));
-
-                return list;
+                }
             }
-            if(asc != null)
+            var list = await query.ToListAsync();
+            return list;
+            /*
+            if (asc != null)
             {
 
                 var source = _context.Set<TModel>();
@@ -96,7 +135,7 @@ namespace Archi.Library.Controllers
             else
             {
                 return await _context.Set<TModel>().Where(x => x.Active == true).ToListAsync();
-            }
+            }*/
         }
         
 
