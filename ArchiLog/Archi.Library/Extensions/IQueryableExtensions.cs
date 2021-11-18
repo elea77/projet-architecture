@@ -10,17 +10,17 @@ namespace Archi.Library.Extensions
         {
             Expression finalExpression = Expression.Constant(true);
             var type = typeof(TModel);
-            var property = type.GetProperty(key);// recupererle type
+            var property = type.GetProperty(key);// recuperer le type 
             ParameterExpression pe = Expression.Parameter(typeof(TModel), "string"); // recuperer le type de la data
             MemberExpression me = Expression.Property(pe, key);
 
-            string replacx(string replacx, char[] characs)
+            string replaceIt(string replaceIt, char[] characs)
             {
                 foreach (char charac in characs)
                 {
-                    replacx = replacx.Replace(charac, ' ');
+                    replaceIt = replaceIt.Replace(charac, ' ');
                 }
-                return replacx;
+                return replaceIt;
             }
 
 
@@ -32,20 +32,20 @@ namespace Archi.Library.Extensions
                 {
                     if (value.Contains("[,"))// inferieur 
                     {
-                        value = replacx(value, new char[] { '[', ',', ']' });
+                        value = replaceIt(value, new char[] { '[', ',', ']' });
                         ConstantExpression constant = Expression.Constant(Convert.ChangeType(value, property.PropertyType));
                         finalExpression = Expression.LessThanOrEqual(me, constant);
                     }
                     else if (value.Contains(",]"))// superieure 
                     {
-                        value = replacx(value, new char[] { '[', ',', ']' });
+                        value = replaceIt(value, new char[] { '[', ',', ']' });
                         ConstantExpression constant = Expression.Constant(Convert.ChangeType(value, property.PropertyType));
                         finalExpression = Expression.GreaterThanOrEqual(me, constant);
                     }
                     else // fourchette 
                     {
                         Expression expression2 = null;
-                        value = replacx(value, new char[] { '[', ']' });
+                        value = replaceIt(value, new char[] { '[', ']' });
                         var x = value.Split(",");
                         ConstantExpression constant1 = Expression.Constant(Convert.ChangeType(x[0], property.PropertyType));
                         ConstantExpression constant2 = Expression.Constant(Convert.ChangeType(x[1], property.PropertyType));
@@ -69,9 +69,8 @@ namespace Archi.Library.Extensions
             else 
             {
                 var w = Convert.ChangeType(value, property.PropertyType);
-                ConstantExpression constant = Expression.Constant(w); //créer une valeur pour comparer avec me type
-                finalExpression = Expression.Equal(me, constant); // Equal exemple mail==mail@mail.COM
-                // c'est comme si je faisais -> Pizza.Name = "Pizza6";
+                ConstantExpression constant = Expression.Constant(w); //créer une valeur pour comparer avec le type
+                finalExpression = Expression.Equal(me, constant); // c'est comme si je faisais -> Pizza.Name = "Pizza6";
             }
 
 
