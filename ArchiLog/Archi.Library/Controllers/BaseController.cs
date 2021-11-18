@@ -62,65 +62,29 @@ namespace Archi.Library.Controllers
             return query;
         }
 
+        protected System.Linq.IQueryable<TModel> OrderBy(string order, string element, IQueryable<TModel> query)
+        {
+            var parameter = Expression.Parameter(typeof(TModel), "x");
+
+            Expression property = Expression.Property(parameter, element);
+            var lambda = Expression.Lambda(property, parameter);
+
+            // REFLECTION: source.OrderBy(x => x.Property)
+            var orderByMethod = typeof(Queryable).GetMethods().First(x => x.Name == order && x.GetParameters().Length == 2);
+            var orderByGeneric = orderByMethod.MakeGenericMethod(typeof(TModel), property.Type);
+            var newQuery = orderByGeneric.Invoke(null, new object[] { query, lambda });
+
+            return ((IOrderedQueryable<TModel>)newQuery);
+        }
+
         // GET: api/Pizzas?range=0-5 | api/Pizzas?asc=price
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TModel>>> Index(string range, string asc, string desc)
         {
             var query = _context.Set<TModel>().Where(x => x.Active == true);
-            if (!string.IsNullOrWhiteSpace(range))
-            {
-                try
-                {
-                    query = GetRanged(range, query);
-                }
-                catch
-                {
-
-                }
-            }
-            var list = await query.ToListAsync();
-            return list;
-            /*
-            if (asc != null)
-            {
-
-                var source = _context.Set<TModel>();
-
-                // LAMBDA: x => x.[PropertyName]
-                var parameter = Expression.Parameter(typeof(TModel), "x");
-
-                Expression property = Expression.Property(parameter, asc);
-                var lambda = Expression.Lambda(property, parameter);
-
-                // REFLECTION: source.OrderBy(x => x.Property)
-                var orderByMethod = typeof(Queryable).GetMethods().First(x => x.Name == "OrderBy" && x.GetParameters().Length == 2);
-                var orderByGeneric = orderByMethod.MakeGenericMethod(typeof(TModel), property.Type);
-                var result = orderByGeneric.Invoke(null, new object[] { source, lambda });
-
-                return await ((IOrderedQueryable<TModel>)result).ToListAsync();
-            }
-            if (desc != null)
-            {
-
-                var source = _context.Set<TModel>();
-
-                // LAMBDA: x => x.[PropertyName]
-                var parameter = Expression.Parameter(typeof(TModel), "x");
-
-                Expression property = Expression.Property(parameter, desc);
-                var lambda = Expression.Lambda(property, parameter);
-
-                // REFLECTION: source.OrderBy(x => x.Property)
-                var orderByMethod = typeof(Queryable).GetMethods().First(x => x.Name == "OrderByDescending" && x.GetParameters().Length == 2);
-                var orderByGeneric = orderByMethod.MakeGenericMethod(typeof(TModel), property.Type);
-                var result = orderByGeneric.Invoke(null, new object[] { source, lambda });
-
-                return await ((IOrderedQueryable<TModel>)result).ToListAsync();
-            }
 
             if (Request != null)
             {
-                var query = _context.Set<TModel>().AsQueryable();
                 var parameters = Request.Query.Where((x) => x.Key != "fields" && x.Key != "range" && x.Key != "asc" && x.Key != "desc");
 
                 if (parameters.Count() > 0)
@@ -130,12 +94,25 @@ namespace Archi.Library.Controllers
                         query = query.filter(parameter.Key, parameter.Value);
                     }
                 }
-                return query.ToList();
             }
-            else
+
+            if (!string.IsNullOrWhiteSpace(range))
             {
-                return await _context.Set<TModel>().Where(x => x.Active == true).ToListAsync();
-            }*/
+                query = GetRanged(range, query);
+            }
+
+            if (asc != null)
+            {
+                query = OrderBy("OrderBy", asc, query);
+            }
+
+            if (desc != null)
+            {
+                query = OrderBy("OrderByDescending", desc, query);
+            }
+
+            var list = await query.ToListAsync();
+            return list;
         }
         
 
