@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archi.api", "Archi.api\Arch
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archi.Library", "Archi.Library\Archi.Library.csproj", "{D97F0EB0-E5B6-4E08-9E6F-08F7E46081DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestsUnitaires", "TestsUnitaires\TestsUnitaires.csproj", "{99040036-4FEF-45BF-8092-6BE162C5326D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{D97F0EB0-E5B6-4E08-9E6F-08F7E46081DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D97F0EB0-E5B6-4E08-9E6F-08F7E46081DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D97F0EB0-E5B6-4E08-9E6F-08F7E46081DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99040036-4FEF-45BF-8092-6BE162C5326D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99040036-4FEF-45BF-8092-6BE162C5326D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99040036-4FEF-45BF-8092-6BE162C5326D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99040036-4FEF-45BF-8092-6BE162C5326D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
