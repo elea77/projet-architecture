@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Archi.Library.Extensions;
@@ -77,6 +78,36 @@ namespace Archi.Library.Controllers
             return ((IOrderedQueryable<TModel>)newQuery);
         }
 
+        protected System.Linq.IQueryable<TModel> SearchByElement(string element, string search, IQueryable<TModel> query)
+        {
+            var parameter = Expression.Parameter(typeof(TModel), "x");
+
+            Expression property = Expression.Property(parameter, element);
+            Expression<Func<TModel, bool>> lambda;
+
+            var splitedSearch = search.Split(",");
+            IQueryable<TModel> finalQuery = null;
+
+            for (int i = 0; i < splitedSearch.Count(); i++)
+            {
+                MethodInfo method = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+                var someValue = Expression.Constant(splitedSearch[i], typeof(string));
+                var containsMethodExp = Expression.Call(property, method, someValue);
+                lambda = Expression.Lambda<Func<TModel, bool>>(containsMethodExp, parameter);
+                IQueryable<TModel> newQuery = query.Where(lambda);
+                if (finalQuery == null)
+                {
+                    finalQuery = newQuery;
+                }
+                else
+                {
+                    finalQuery = finalQuery.Concat(newQuery);
+                }
+            }
+
+            return finalQuery;
+        }
+
         // GET: api/Pizzas?range=0-5 | api/Pizzas?asc=price
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TModel>>> Index(string range, string asc, string desc)
@@ -114,7 +145,28 @@ namespace Archi.Library.Controllers
             var list = await query.ToListAsync();
             return list;
         }
-        
+
+        // GET: api/Pizzas/search?name=*napoli*&type=pizza
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<TModel>>> Search()
+        {
+            var query = _context.Set<TModel>().Where(x => x.Active == true);
+
+            if (Request != null)
+            {
+                var parameters = Request.Query.Where((x) => x.Key != null);
+                if (parameters.Count() > 0)
+                {
+                    foreach (var parameter in parameters)
+                    {
+                        query = SearchByElement(parameter.Key, parameter.Value, query);
+                    }
+                }
+            }
+
+            var list = await query.ToListAsync();
+            return list;
+        }
 
     }
 }
