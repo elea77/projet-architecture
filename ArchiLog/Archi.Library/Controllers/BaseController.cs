@@ -23,6 +23,16 @@ namespace Archi.Library.Controllers
 
         protected System.Linq.IQueryable<TModel> GetRanged(string range, IQueryable<TModel> query)
         {
+            var parameters = Request.Query.Where((x) => x.Key != "range");
+            string urlParams = "";
+            if (parameters.Count() > 0)
+            {
+                foreach (var parameter in parameters)
+                {
+                    urlParams = urlParams + "&" + parameter.Key + "=" + parameter.Value;
+                }
+            }
+
             string[] limits = range.Split('-');
             int limitMin = int.Parse(limits[0]);
             int limitMax = int.Parse(limits[1]);
@@ -51,10 +61,10 @@ namespace Archi.Library.Controllers
             Type myType = typeof(TModel);
             string typeName = myType.Name;
             string basePath = Request.Path;
-            string firstLink = basePath + "?range=0-" + (numberElement - 1);
-            string lastLink = basePath + "?range=" + (countElement - numberElement) + "-" + (countElement - 1);
-            string prevLink = basePath + "?range=" + rangePrev;
-            string nextLink = basePath + "?range=" + rangeNext;
+            string firstLink = basePath + "?range=0-" + (numberElement - 1) + urlParams;
+            string lastLink = basePath + "?range=" + (countElement - numberElement) + "-" + (countElement - 1) + urlParams;
+            string prevLink = basePath + "?range=" + rangePrev + urlParams;
+            string nextLink = basePath + "?range=" + rangeNext + urlParams;
             Response.Headers.Add("Content-Range", range + "/" + numberElement);
             Response.Headers.Add("Accept-Range", typeName + " 10");
             Response.Headers.Add("Link", firstLink + "; rel=\"first\", " + prevLink + "; rel=\"prev\", " + nextLink + "; rel=\"next\", " + lastLink + "; rel=\"last\"");
